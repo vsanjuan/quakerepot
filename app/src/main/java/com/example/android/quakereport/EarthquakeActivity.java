@@ -15,6 +15,7 @@
  */
 package com.example.android.quakereport;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
@@ -41,7 +42,14 @@ public class EarthquakeActivity extends AppCompatActivity {
         earthquakes.add(new Earthquake(1.6,"Paris","Oct30, 2011"));*/
 
         // Creates an Earthquake List from the JSON object using an auxiliary method
-        ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
+        //ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
+
+        new EarthquakeAsynTask().execute();
+
+
+    }
+
+    private void updateUI(ArrayList<Earthquake> earthquakes){
 
         // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
@@ -53,5 +61,23 @@ public class EarthquakeActivity extends AppCompatActivity {
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
+
+    }
+
+    private class EarthquakeAsynTask extends AsyncTask<String, Void, ArrayList<Earthquake>>{
+
+        protected ArrayList<Earthquake> doInBackground(String... urls) {
+
+            String json = QueryUtils.SAMPLE_JSON_RESPONSE;
+
+            return QueryUtils.extractEarthquakes(json);
+        }
+
+        protected void onPostExecute(ArrayList<Earthquake> earthquakes) {
+
+            updateUI(earthquakes);
+
+        }
+
     }
 }
