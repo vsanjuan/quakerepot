@@ -25,26 +25,16 @@ import java.util.ArrayList;
 public class EarthquakeActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
+    public static final String USGS_URL =
+            "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        // Create a fake list of earthquake locations.
-/*        ArrayList<Earthquake> earthquakes = new ArrayList<>();
-        earthquakes.add(new Earthquake(7.20,"San Francisco","Feb 2, 2016"));
-        earthquakes.add(new Earthquake(6.1,"London","July 20,2015"));
-        earthquakes.add(new Earthquake(3.9,"Tokyo","Nov 10, 2014"));
-        earthquakes.add(new Earthquake(5.4,"Mexico City","May 3,2014"));
-        earthquakes.add(new Earthquake(2.8,"Moscow","Jan 31,2013"));
-        earthquakes.add(new Earthquake(4.9,"Rio de Janeiro","Aug 19, 2012"));
-        earthquakes.add(new Earthquake(1.6,"Paris","Oct30, 2011"));*/
 
-        // Creates an Earthquake List from the JSON object using an auxiliary method
-        //ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
-
-        new EarthquakeAsynTask().execute();
+        new EarthquakeAsyncTask().execute();
 
 
     }
@@ -64,13 +54,15 @@ public class EarthquakeActivity extends AppCompatActivity {
 
     }
 
-    private class EarthquakeAsynTask extends AsyncTask<String, Void, ArrayList<Earthquake>>{
+    private class EarthquakeAsyncTask extends AsyncTask<String, Void, ArrayList<Earthquake>>{
 
         protected ArrayList<Earthquake> doInBackground(String... urls) {
 
-            String json = QueryUtils.SAMPLE_JSON_RESPONSE;
+            //String json = QueryUtils.SAMPLE_JSON_RESPONSE;
 
-            return QueryUtils.extractEarthquakes(json);
+            return Utils.fetchEarthquakeData(USGS_URL);
+
+            // return QueryUtils.extractEarthquakes(json);
         }
 
         protected void onPostExecute(ArrayList<Earthquake> earthquakes) {
