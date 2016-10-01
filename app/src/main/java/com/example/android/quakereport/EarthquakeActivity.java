@@ -15,11 +15,11 @@
  */
 package com.example.android.quakereport;
 
+import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.content.Loader;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EarthquakeActivity extends AppCompatActivity
-    implements LoaderManager.LoaderCallbacks<List<Earthquake>>, android.app.LoaderManager.LoaderCallbacks<Object> {
+    implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
     private static final String USGS_URL =
@@ -50,7 +50,7 @@ public class EarthquakeActivity extends AppCompatActivity
 
 
         // TODO: Create a new loader for the given URL
-        return new EarthquakeLoader(this,USGS_URL);
+        return (Loader) new EarthquakeLoader(this,USGS_URL);
 
     }
 
@@ -83,46 +83,5 @@ public class EarthquakeActivity extends AppCompatActivity
 
     }
 
-    private class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
 
-/*        protected ArrayList<Earthquake> doInBackground(String... urls) {
-
-            //String json = QueryUtils.SAMPLE_JSON_RESPONSE;
-
-            return Utils.fetchEarthquakeData(USGS_URL);
-
-            // return QueryUtils.extractEarthquakes(json);
-        }*/
-
-
-        public EarthquakeLoader(Context context, String url) {
-
-            super(context);
-            String mUrl = url;
-
-        }
-
-        @Override
-        protected void onStartLoading() {
-
-            forceLoad();
-
-        }
-
-        @Override
-        public List<Earthquake> loadInBackground(){
-
-            return Utils.fetchEarthquakeData(USGS_URL);
-
-        }
-
-
-
-/*        protected void onPostExecute(ArrayList<Earthquake> earthquakes) {
-
-            updateUI(earthquakes);
-
-        }*/
-
-    }
 }
