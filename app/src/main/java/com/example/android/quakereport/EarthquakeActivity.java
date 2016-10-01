@@ -16,8 +16,6 @@
 package com.example.android.quakereport;
 
 import android.app.LoaderManager;
-import android.content.AsyncTaskLoader;
-import android.content.Context;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +27,12 @@ import java.util.List;
 public class EarthquakeActivity extends AppCompatActivity
     implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
 
+    /**
+     * Constant value for the earthquake loader ID. We can choose any integer.
+     * This really only comes into play if you're using multiple loaders.
+     */
+    private static final int EARTHQUAKE_LOADER_ID = 1;
+
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
     private static final String USGS_URL =
             "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
@@ -39,8 +43,7 @@ public class EarthquakeActivity extends AppCompatActivity
         setContentView(R.layout.earthquake_activity);
 
 
-        // new EarthquakeAsyncTask().execute();
-        getLoaderManager().initLoader(0,null, this);
+        getLoaderManager().initLoader(EARTHQUAKE_LOADER_ID,null, this);
 
 
     }
@@ -49,14 +52,14 @@ public class EarthquakeActivity extends AppCompatActivity
     public Loader<List<Earthquake>> onCreateLoader(int i, Bundle bundle){
 
 
-        // TODO: Create a new loader for the given URL
-        return (Loader) new EarthquakeLoader(this,USGS_URL);
+        // Create a new loader for the given URL
+        return  new EarthquakeLoader(this,USGS_URL);
 
     }
 
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
-        // TODO: Update the UI with the result
+        // Update the UI with the result
         updateUI((ArrayList<Earthquake>)earthquakes);
 
     }

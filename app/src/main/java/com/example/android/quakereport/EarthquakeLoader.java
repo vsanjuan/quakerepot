@@ -11,15 +11,9 @@ import java.util.List;
 
 public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
 
-    /*        protected ArrayList<Earthquake> doInBackground(String... urls) {
-
-                //String json = QueryUtils.SAMPLE_JSON_RESPONSE;
-
-                return Utils.fetchEarthquakeData(USGS_URL);
-
-                // return QueryUtils.extractEarthquakes(json);
-            }*/
     private String mUrl;
+
+    public static final String LOG_TAG = EarthquakeLoader.class.getName();
 
 
     public EarthquakeLoader(Context context, String url) {
@@ -45,16 +39,13 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
     @Override
     public List<Earthquake> loadInBackground(){
 
+        if (getmUrl() == null) {
+            return null;
+        }
+
+        // Perform the network request, parse the response, and extract a list of earthquakes.
         return Utils.fetchEarthquakeData(getmUrl());
 
     }
-
-
-
-/*        protected void onPostExecute(ArrayList<Earthquake> earthquakes) {
-
-            updateUI(earthquakes);
-
-        }*/
 
 }
