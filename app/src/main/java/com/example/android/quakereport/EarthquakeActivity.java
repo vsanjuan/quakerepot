@@ -19,6 +19,7 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class EarthquakeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-
+        Log.v(LOG_TAG,"Call initLoader");
         getLoaderManager().initLoader(EARTHQUAKE_LOADER_ID,null, this);
 
 
@@ -51,6 +52,7 @@ public class EarthquakeActivity extends AppCompatActivity
     @Override
     public Loader<List<Earthquake>> onCreateLoader(int i, Bundle bundle){
 
+        Log.v(LOG_TAG,"Call OnCreateLoader");
 
         // Create a new loader for the given URL
         return  new EarthquakeLoader(this,USGS_URL);
@@ -59,6 +61,8 @@ public class EarthquakeActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
+
+        Log.v(LOG_TAG,"onLoadFinished");
         // Update the UI with the result
         updateUI((ArrayList<Earthquake>)earthquakes);
 
@@ -66,7 +70,10 @@ public class EarthquakeActivity extends AppCompatActivity
 
     @Override
     public void onLoaderReset(Loader<List<Earthquake>> loader) {
-        // TODO: Loader reset, so we can clear out our existing data.
+
+        Log.v(LOG_TAG,"onLoaderReset");
+
+        // Loader reset, so we can clear out our existing data.
         updateUI(new ArrayList<Earthquake>());
 
     }
