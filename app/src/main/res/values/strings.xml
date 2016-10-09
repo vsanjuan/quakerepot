@@ -15,6 +15,10 @@
 -->
 <resources>
     <string name="app_name">Quake Report</string>
-    <string name="empy_message">No earthquakes found</string>
+    <string name="empty_message">No earthquakes found</string>
     <string name="no_connection">No connection available</string>
+    <!-- Settings Menu Item [CHAR LIMIT=NONE] -->
+    <string name="settings_menu_time">Settings</string>
+    <!-- Settings Activity Title [CHAR LIMIT=NONE] -->
+    <string name="settings_title">Earthquake Settings</string>
 </resources>
