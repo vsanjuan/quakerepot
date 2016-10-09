@@ -16,7 +16,10 @@
 package com.example.android.quakereport;
 
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -46,6 +49,9 @@ public class EarthquakeActivity extends AppCompatActivity
     /** Spinner that is shown while the earthquake data is retrieved */
     private ProgressBar mProgressBar;
 
+    /** Connectivity status **/
+    private boolean isConnected;
+
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
     private static final String USGS_URL =
             "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
@@ -55,6 +61,15 @@ public class EarthquakeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
+        // Check if there is internet connection
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        isConnected = activeNetwork != null &&
+                               activeNetwork.isConnectedOrConnecting();
+
+
         // Find a reference to the {@link ListView} in the layout
         earthquakeListView = (ListView) findViewById(R.id.list);
 
@@ -63,6 +78,8 @@ public class EarthquakeActivity extends AppCompatActivity
 
         // Save the progress bar widget
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+
+        if (!isConnected) { mProgressBar.setVisibility(View.INVISIBLE);}
 
         Log.v(LOG_TAG,"Call initLoader");
         getLoaderManager().initLoader(EARTHQUAKE_LOADER_ID,null, this);
@@ -85,7 +102,17 @@ public class EarthquakeActivity extends AppCompatActivity
 
         Log.v(LOG_TAG,"onLoadFinished");
         // Set the text in the empty state TextView after the first load
-        mEmptyStateTextView.setText(getText(R.string.empy_message));
+        if (isConnected) {
+
+            mEmptyStateTextView.setText(getText(R.string.empy_message));
+
+        } else {
+
+            mEmptyStateTextView.setText(R.string.no_connection);
+
+        }
+
+
 
         // Hid the progress bar
         mProgressBar.setVisibility(View.INVISIBLE);
