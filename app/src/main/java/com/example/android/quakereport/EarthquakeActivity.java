@@ -20,7 +20,10 @@ import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,15 @@ public class EarthquakeActivity extends AppCompatActivity
      */
     private static final int EARTHQUAKE_LOADER_ID = 1;
 
+    /** TextView that is displayed when the list is empty */
+    private TextView mEmptyStateTextView;
+
+    /** TextView that is displayed when the list is not empty */
+    private ListView earthquakeListView;
+
+    /** Spinner that is shown while the earthquake data is retrieved */
+    private ProgressBar mProgressBar;
+
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
     private static final String USGS_URL =
             "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
@@ -42,6 +54,15 @@ public class EarthquakeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
+
+        // Find a reference to the {@link ListView} in the layout
+        earthquakeListView = (ListView) findViewById(R.id.list);
+
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        earthquakeListView.setEmptyView(mEmptyStateTextView);
+
+        // Save the progress bar widget
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         Log.v(LOG_TAG,"Call initLoader");
         getLoaderManager().initLoader(EARTHQUAKE_LOADER_ID,null, this);
@@ -63,6 +84,16 @@ public class EarthquakeActivity extends AppCompatActivity
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
 
         Log.v(LOG_TAG,"onLoadFinished");
+        // Set the text in the empty state TextView after the first load
+        mEmptyStateTextView.setText(getText(R.string.empy_message));
+
+        // Hid the progress bar
+        mProgressBar.setVisibility(View.INVISIBLE);
+
+        // Empty the list to check the empty list response
+        //  Comment out after checking
+        // earthquakes.clear();
+
         // Update the UI with the result
         updateUI((ArrayList<Earthquake>)earthquakes);
 
@@ -80,18 +111,17 @@ public class EarthquakeActivity extends AppCompatActivity
 
     private void updateUI(ArrayList<Earthquake> earthquakes){
 
-        // Find a reference to the {@link ListView} in the layout
-        ListView earthquakeListView = (ListView) findViewById(R.id.list);
 
         // Create a new adapter
         EarthquakeAdapter adapter = new EarthquakeAdapter(getApplicationContext(),earthquakes);
-
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
 
     }
+
+
 
 
 }

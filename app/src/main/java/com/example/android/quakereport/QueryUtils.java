@@ -103,6 +103,14 @@ public final class QueryUtils {
 
         Log.v(LOG_TAG,"Parsing data");
 
+        // Code to check the progress bar indicator
+
+/*        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
         // Create URL object
         URL url = createUrl(requestUrl);
 
